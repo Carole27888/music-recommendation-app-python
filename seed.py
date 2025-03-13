@@ -15,7 +15,13 @@ session.add_all(artists)
 session.commit()
 print("Artists created successfully!")
 
-users = [User(name=fake.name()) for _ in range(10)]
+users = [
+    User(
+        name=fake.name(),
+        favorite_artist=random.choice(artists).name,
+        preferred_genres=random.choice(genres)
+    ) for _ in range(10)
+]
 session.add_all(users)
 session.commit()
 print("Users created successfully!")
@@ -39,7 +45,5 @@ for user in users:
         session.add(user_song)
 
 session.commit()
-
-
 session.close()
-
+print("Database seeding completed!")
