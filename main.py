@@ -2,7 +2,7 @@ from functionality import add_user, add_song, recommend_songs, rate_song, search
 
 def main():
     while True:
-        print(" Music Recommendation App")
+        print(" Welcome to Music Recommendation App")
         print("1. Add User")
         print("2. Add Song")
         print("3. Rate a Song")

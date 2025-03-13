@@ -1,4 +1,4 @@
-from models import User, Song, UserSongs, Playlist, session
+from models import User, Song, UserSongs, Playlist, PlaylistSongs, session
 from sqlalchemy.exc import IntegrityError
 
 def add_user(name, favorite_artist, preferred_genres):
@@ -23,7 +23,6 @@ def add_user(name, favorite_artist, preferred_genres):
         print(f"Error: User '{name}' already exists in the database.")
 
 def add_song(title, artist, genre, user_name):
-    """Adds a new song and assigns it to the user who added it."""
     user = session.query(User).filter_by(name=user_name).first()
     if not user:
         print(f"User '{user_name}' not found. Please add the user first.")
@@ -48,7 +47,6 @@ def add_song(title, artist, genre, user_name):
     print(f"User '{user_name}' has added '{title}' to their library.")
 
 def rate_song(user_name, song_title, rating):
-    """Allows a user to rate a song (1-5 stars)."""
     user = session.query(User).filter_by(name=user_name).first()
     song = session.query(Song).filter_by(title=song_title).first()
 
@@ -72,10 +70,9 @@ def rate_song(user_name, song_title, rating):
         session.add(user_song)
 
     session.commit()
-    print(f"⭐ User '{user_name}' rated '{song_title}' with {rating}/5.")
+    print(f"User '{user_name}' rated '{song_title}' with {rating}/5.")
 
 def recommend_songs(user_name):
-    """Recommends songs based on ratings and user preferences."""
     user = session.query(User).filter_by(name=user_name).first()
     if not user:
         print("User not found.")
@@ -101,7 +98,6 @@ def recommend_songs(user_name):
         print("No recommendations found.")
 
 def search_songs(title):
-    """Searches for a song by title."""
     song = session.query(Song).filter_by(title=title).first()
     if song:
         print(f"Song Found: {song.title}")
@@ -114,7 +110,7 @@ def create_playlist(user_name, playlist_name):
         print(f"User '{user_name}' not found.")
         return
 
-    playlist = Playlist(name=playlist_name, user_id=user.id)  # Assuming Playlist has user_id
+    playlist = Playlist(name=playlist_name, user_id=user.id)  
     session.add(playlist)
     session.commit()
     print(f"Playlist '{playlist_name}' created for user '{user_name}'.")
@@ -135,8 +131,8 @@ def add_song_to_playlist(user_name, playlist_name, song_title):
         print(f"Song '{song_title}' not found.")
         return
 
-    playlist.add_song(song)  # Using the add_song method from the Playlist class
-    session.commit()
+    # Use the add_song method from the Playlist class
+    playlist.add_song(song)
 
 def remove_song_from_playlist(user_name, playlist_name, song_title):
     user = session.query(User).filter_by(name=user_name).first()
@@ -154,12 +150,10 @@ def remove_song_from_playlist(user_name, playlist_name, song_title):
         print(f"Song '{song_title}' not found.")
         return
 
-    playlist.remove_song(song)  # Using the remove_song method from the Playlist class
+    playlist.remove_song(song)  
     session.commit()
-# functionality.py
 
 def get_playlist(playlist_name):
-    
     playlist = session.query(Playlist).filter_by(name=playlist_name).first()
     if playlist:
         print(f"Playlist '{playlist_name}' contains the following songs:")

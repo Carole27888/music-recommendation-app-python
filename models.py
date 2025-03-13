@@ -19,6 +19,13 @@ class User(Base):
 
     songs = relationship("Song", secondary="user_songs", back_populates="users")
 
+class Artist(Base):
+    __tablename__ = 'artists'
+    id = Column(Integer, primary_key=True)
+    name = Column(String, nullable=False)
+
+    songs = relationship("Song", back_populates="artist")
+
 # UserSongs Model- many-to-many relationship
 class UserSongs(Base):
     __tablename__ = 'user_songs'
@@ -64,6 +71,9 @@ class Song(Base):
     title = Column(String, nullable=False)
     artist = Column(String, nullable=False)
     genre = Column(String, nullable=False)
+    artist_id = Column(Integer, ForeignKey('artists.id'))
+
+    artist = relationship("Artist", back_populates="songs")
 
     playlists = relationship("Playlist", secondary="playlist_songs", back_populates="songs")
     users = relationship("User", secondary="user_songs", back_populates="songs")
@@ -73,6 +83,6 @@ class PlaylistSongs(Base):
     playlist_id = Column(Integer, ForeignKey('playlists.id'), primary_key=True)
     song_id = Column(Integer, ForeignKey('songs.id'), primary_key=True)
 
-# Create Tables
+
 Base.metadata.create_all(engine)
 print("Database and tables created successfully!")
